@@ -55,7 +55,7 @@ namespace csd_biller
         /// <returns></returns>
         public static DataTable Read()
         {
-            string[] lines = System.IO.File.ReadAllLines(@"C:\project\csd_biller\csd_main.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\project\price _files\csd_main.txt");
             
             //create table with data
             DataTable dt1 = new DataTable();
