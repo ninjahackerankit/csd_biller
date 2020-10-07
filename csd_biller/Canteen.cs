@@ -194,20 +194,26 @@ namespace csd_biller
                 }
                 else
                 {
-                    temp.Append(r["Name"].ToString() + "    ");
+                    string name = r["Name"].ToString();
+
+                    // Add extra spaces,if str length is less than 22 
+                    for (int i= 0; i<22- r["Name"].ToString().Length; i++)
+                    {
+                        name = name +  i.ToString();
+                    }
+                    
+                    temp.Append(name + "    ");
                     temp.Append(r["Quantity"].ToString() + "    ");
                     temp.Append(r["Price"].ToString() + "    ");
                     temp.Append(r["Total"].ToString() + "    ");
 
                     // save data in file
-                    temp2.Append(r["Name"].ToString() + "    ");
+                    temp2.Append(name + "    ");
                     temp2.Append(r["Quantity"].ToString() + "    ");
                     temp2.Append(r["Price"].ToString() + "    ");
                     temp2.Append(r["Total"].ToString() + "    ");
                 }
-                
-                
-                //}
+
                 total = total + Convert.ToDouble(r["Total"].ToString());
                 b.Append(temp.ToString());
                 b.Append("\n");
@@ -230,15 +236,11 @@ namespace csd_biller
             printer.AlignLeft();
             printer.Font("Name                    Quantity Price Total", Fonts.FontA);
             printer.Separator();
-            //printer.Font("Font A", Fonts.FontA);
             printer.Font(b.ToString(), Fonts.FontA);
-
             printer.Separator();
             printer.InitializePrint();
             printer.AlignRight();
-            printer.NewLines(1);
             printer.Font(totalstr, Fonts.FontA);
-            printer.NewLines(1);
             printer.Separator();
             printer.AlignCenter();
             printer.Append("Thank You!!! ");
@@ -247,12 +249,14 @@ namespace csd_biller
             printer.FullPaperCut();
             printer.PrintDocument();
             /// bill printer end
+            MessageBox.Show(b.ToString());        
 
 
             bill.Clear();
             dataGridView1.DataSource = null;
             txtTotalBill.Text = "";
             txttotalprice.Text = "";
+            //txtQuantity.Text = "";
 
             DateTime today = DateTime.Today;
             string time = DateTime.Now.ToString("h:mm:sec");
@@ -277,22 +281,28 @@ namespace csd_biller
 
         public int RoundOff(double num)
         {
-            double roundnum = num; 
-            for(int i=0; i< num.ToString().IndexOf('.'); i++)
-            {
-                roundnum = roundnum / 10;
-            }
-
-            if(roundnum>0)
-            {
-                int n = Convert.ToInt32(num.ToString().Substring( 0, Convert.ToInt32(num.ToString().IndexOf('.')) ) )+1;
-                return n;
-            }
-            else
+            if(num.ToString().IndexOf('.')<0)
             {
                 return Convert.ToInt32(num);
             }
-            
+            else
+            {
+                double roundnum = num;
+                for (int i = 0; i < num.ToString().IndexOf('.'); i++)
+                {
+                    roundnum = roundnum / 10;
+                }
+
+                if (roundnum > 0)
+                {
+                    int n = Convert.ToInt32(num.ToString().Substring(0, Convert.ToInt32(num.ToString().IndexOf('.')))) + 1;
+                    return n;
+                }
+                else
+                {
+                    return Convert.ToInt32(num);
+                }
+            }                     
         }
     }
 }
